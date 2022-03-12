@@ -1,6 +1,6 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-namespace userapi.Models;
+namespace productapi.Models;
 
 public class User
 {

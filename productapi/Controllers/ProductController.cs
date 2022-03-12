@@ -1,6 +1,7 @@
+using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Mvc;
 using productapi.Services;
-using productapi.Models;
+using Microsoft.Extensions.Primitives;
 
 [ApiController]
 [Route("api/product")]
@@ -14,8 +15,19 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<List<Product>> Get()
+    public async Task<IActionResult> Get()
     {
-        return await _productService.GetProductsAsync();
+        // check the jwt-token.
+        var headers = this.Request.Headers;
+        StringValues stringValues;
+        headers.TryGetValue("jwt-token", out stringValues);
+        var jwtToken = stringValues.FirstOrDefault();
+
+        if (_productService.verifyJWT(jwtToken) is false)
+        {
+            return Unauthorized();
+        }
+
+        return Ok(await _productService.GetProductsAsync());
     }
 }
