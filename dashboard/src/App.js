@@ -34,6 +34,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
+        <div>No Frills FrontEnd</div>
         <div className="div-component">
           <Login onLoginResult={handleLoginResult}></Login>
         </div>
