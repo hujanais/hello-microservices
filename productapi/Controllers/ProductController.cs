@@ -20,7 +20,7 @@ public class ProductController : ControllerBase
         // check the jwt-token.
         var headers = this.Request.Headers;
         StringValues stringValues;
-        headers.TryGetValue("jwt-token", out stringValues);
+        headers.TryGetValue("jwt", out stringValues);
         var jwtToken = stringValues.FirstOrDefault();
 
         if (_productService.verifyJWT(jwtToken) is false)
