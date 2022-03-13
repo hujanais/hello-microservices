@@ -1,7 +1,7 @@
 FROM arm64v8/node:14-bullseye-slim AS builder
 
 # Set working directory
-WORKDIR /app
+WORKDIR /usr/src/app
 
 # Copy project files to working dir
 COPY . .
@@ -32,3 +32,5 @@ COPY --from=build /usr/src/app/dist/shitto-app /usr/share/nginx/html
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
 
 EXPOSE 80
+
+STOPSIGNAL SIGTERM
