@@ -1,1 +1,4 @@
-.Result {}
+.Result {
+  margin: 5px;
+  min-width: 650px;
+}
