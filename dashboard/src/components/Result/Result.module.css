@@ -1,4 +1,6 @@
 .Result {
   margin: 5px;
   min-width: 650px;
+  max-height: 400px;
+  overflow-y: auto;
 }
