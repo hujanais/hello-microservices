@@ -25,8 +25,8 @@ RUN rm -rf ./*
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy static assets from builder stage
-COPY --from=build /usr/src/app/dist/shitto-app /usr/share/nginx/html
-# COPY --from=builder /app/build /usr/share/nginx/html
+# COPY --from=build /usr/src/app/dist/shitto-app /usr/share/nginx/html
+COPY --from=builder /usr/src/app/build /usr/share/nginx/html
 
 # Containers run nginx with global directives and daemon off
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
