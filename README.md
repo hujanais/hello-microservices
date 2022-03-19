@@ -106,9 +106,9 @@ You should now be able to run the dotnet cli from any directory.
 ------
 If you are able to setup your Raspberry PI with the above instructions, congratulation and I hope my instructions were easy enough to follow.  The next section will take you through my process of going from source code to Docker microservices.
 
-## <div align=center>From Source Code To Docker Microservices</div>
+## From Source Code To Docker Microservices
 
-<div align=center><b>Act 2 of 3 [From Zero to Microservices]</b></div>
+Act 2 of 3 [From Zero to Microservices]
 
 You can actually skip this section and go straight to the last Act if you just want to download the pre-built Docker images and use them but you are most welcomed to explore this section with me.  In this section, I will discuss the nitty-gritty of building the docker containers and share all the source code.  I will essentially chronologically document everything I did to get the Raspberry PI from zero to completion.  Obviously, my first step was to build the Raspberry PI image per the instructions in the first part of this write-up.  I will preemptively mention that the Raspberry PI 4 I had only has 1GB of memory and it was not enough to run all my microservices smoothly so I decided to use a second Pi [an older PI 3B+(1GB)].  Essentially, I used the PI-4 to run the MongoDB and the 2 REST web services and then used the PI-3 to host my React UI front-end.
 
@@ -200,8 +200,7 @@ This is a bare-metal front-end so please don't judge and it was my very first ti
 	docker build -t dashboard .
 	docker run -d -p 8080:80 --name dashboard
 	```
-So to actually serve the front-end, we will not be using the development server.  We will use NGINX web server instead.  I suppose you can still use Apache if you like...
-The Dockerfile for React Front-End [I mostly just copied this from my Angular project]  
+So to actually serve the front-end, we will not be using the development server.  We will use NGINX web server instead.  I suppose you can still use Apache if you like.  The Dockerfile for React Front-End [I mostly just copied this from my Angular project]  
 ```
 FROM arm64v8/node:14-bullseye-slim AS builder
 # Set working directory
