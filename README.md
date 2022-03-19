@@ -139,8 +139,9 @@ docker ps # this will show you the list of running containers and the containerI
 docker exec -it [docker-container-id] bash
 # you will see that the shell prompt will change from the Pi root to the Container root.
 ```
-2. <b>Building the Auth-API docker container from source code. [.NET Core 6 code is in the userapi folder]</b>
+2. <b>Building the Auth-API docker container from source code. [.NET Core 6 code is in the userapi folder]</b><br>
 For the Auth-API, I wanted a simple way for the user to log in with a username/password and return a session token like a JWT-token.
+
 ```
 # build a Docker image based on the Dockerfile
 docker build -t user-api .  [pay attention to the '.' in the command]
@@ -149,14 +150,15 @@ docker build -t user-api .  [pay attention to the '.' in the command]
 # -d to run in detached mode, -p turns on 5500 as the public port
 docker run -d -p 5500:80 --name user-api user-api  
  	
- # now from your laptop, you can access the AuthAPI.
- curl --location --request POST 'http://192.168.1.XX:5500/api/users' \
+# now from your laptop, you can access the AuthAPI.
+curl --location --request POST 'http://192.168.1.XX:5500/api/users' \
 	--header 'Content-Type: application/json' \
 	--data-raw '{ "Username": "guest", "Password": "password" }
+
 # if succeeded return {isSuccess: true, jwt: 968237324 }
 ```
 	
-3. <b>Building the Product-API docker container from source code. [.NET Core 6 code is in the productapi folder]</b>
+3. <b>Building the Product-API docker container from source code. [.NET Core 6 code is in the productapi folder]</b><br>
 My requirement here is to have the ability to retrieve a list of products from the database via,
 ```
 # build a Docker image based on the Dockerfile
@@ -172,7 +174,7 @@ curl --location --request GET 'http://192.168.1.XX:5501/api/product' \
 # if the token is incorrect, nothing will be returned
 # if the token is authenticated, the product list will be returned.
 ```
-4. <b>The deeper dive into the .NET API Dockerfile</b>
+4. <b>The deeper dive into the .NET API Dockerfile</b><br>
 The instructions to build docker images are stored in a file called the Dockerfile. [yes this file has no extension]  There is also a corresponding .dockerignore file to as you guessed it, to keep unnecessary files out of the container for size considerations.
 ```
 # pull the official microsoft sdk docker base image for the bullseye OS.
