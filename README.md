@@ -1,5 +1,5 @@
 ## A PRACTICAL WALKTHROUGH OF USING AND DEPLOYING MICROSERVICES WITH DOCKER
-Act 1 of 3 [The setup]
+<a name="act1">Act 1 of 3 [The setup]</a>
 
 ### Introduction
 This guide is to provide a practical walkthrough of creating, deploying, and using microservices.  The benefits of microservices when it comes to resource balancing, deployment, software development will not be discussed in this article.  However, at the end of this tutorial, you should have a high-level understanding of how containerized deployment works and a practical approach to using it as a general guide for your product deployment.
@@ -107,7 +107,7 @@ If you are able to setup your Raspberry PI with the above instructions, congratu
 
 ## From Source Code To Docker Microservices
 
-Act 2 of 3 [From Zero to Microservices]
+<a name="act2">Act 2 of 3 [From Zero to Docker Microservices]</a>
 
 You can actually skip this section and go straight to the last Act if you just want to download the pre-built Docker images and use them but you are most welcome to explore this section with me.  In this section, I will discuss the nitty-gritty of building the docker containers and share all the source code.  I will essentially chronologically document everything I did to get the Raspberry PI from zero to completion.  Obviously, my first step was to build the Raspberry PI image per the instructions in the first part of this write-up.  I will preemptively mention that the Raspberry PI 4 I had only has 1GB of memory and it was not enough to run all my microservices smoothly so I decided to use a second Pi [an older PI 3B+(1GB)].  Essentially, I used the PI-4 to run the MongoDB and the 2 REST web services and then used the PI-3 to host my React UI front-end.
 
@@ -189,7 +189,7 @@ Start by cloning the source code from https://github.com/hujanais/hello-microser
 	COPY --from=build /app .
 	ENTRYPOINT ["dotnet", "productapi.dll"]	# the command to run the REST service
 	```
-To be honest, my knowledge of Docker is rudimentary and use it only as needed at work but the heavy-duty deployment instructions are done by the CI/CD folks.  Anyhow, let's look at my Dockerfile.  This Dockerfile is pretty much identical for both the Auth and Product API.  
+To be honest, my knowledge of Docker is rudimentary, and use it only as needed at work but the heavy-duty deployment instructions are done by the CI/CD folks.  Anyhow, let's look at my Dockerfile.  This Dockerfile is pretty much identical for both the Auth and Product API.  
 
 Just a note that there is also a docker-compose.yaml file that you can use to deploy grouped containers so that they are running on the same docker network so please look that up as well.  I am not using any of that in this tutorial to keep the readability.
 
@@ -262,5 +262,46 @@ server {
 	}
 }
 ```
+6. <b>Save docker images for distribution [2 options]</b>
+	+ Option 1 is to save an image based on the created container
+	```
+	# save the container into a tar file that can be transmitted.
+	docker save [container-id] > myImage.tar
 
-7. <b>Save docker images for distribution [2 options]</b>
+	# The tar file can then be reloaded into another target device.
+	# the tar file will be loaded into a docker image that can be used.
+	docker load < myImage.tar
+	```
+	+ Option 2 is to use docker hub which is the direction I chose.
+		+ Step 1.  Create an account on hub.docker.com
+		+ Step 2.  In this example, I created 4 repositories.
+			- wickedcool/hello-microservices-dashboard
+			- wickedcool/hello-microservices-authapi
+			- wickedcool/hello-microservices-productapi
+			- wickedcool/hello-microservices-mongo
+	```
+	# Step 3. On the Pi, I pushed the docker images to the the repository.
+	
+	# login to docker on the Pi.
+	docker login 
+	
+	# save the docker container into an image and name it exactly as what you named in the docker hub repo.
+	docker commit [containerId] wickedcool/microservices-mongo:initial
+	
+	# check to see that this new image is created.
+	docker images 
+	
+	# push the image up to the repository.
+	docker push wickedcool/microservices-mongo:initial
+	
+	# to use this image on the repository on another device.
+	docker pull wickedcool/microservices-mongo:initial.
+
+	# repeat for the other user-api, product-api and dashboard containers/images
+	```
+## Using docker containers as microservices
+
+<a name="act3">Act 3 of 3 [The deployment and usage]</a>
+
+This section assumes that you have set up your Raspberry Pis according to instructions in [section 1](#act1).
+
