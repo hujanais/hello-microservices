@@ -1,5 +1,4 @@
-
-## A PRACTICAL WALKTHROUGH OF USING AND DEPLOYING MICROSERVICES
+## A PRACTICAL WALKTHROUGH OF USING AND DEPLOYING MICROSERVICES WITH DOCKER
 Act 1 of 3 [The setup]
 
 ### Introduction
@@ -31,17 +30,16 @@ For my demo, I have decided to use the following tech stack.  ReactJS and .NET C
  5. You will probably need to go to your router to get the IP address of the Pi, but once you get it, you can now SSH into it with your favorite terminal like Putty, Git-Bash, etc.  Personally, I like MobaXTerm because I like to be able to run multiple sessions to different remote devices from 1 app.
  
 ### Installing Git [Required]
-```
- sudo apt-get update && sudo apt-get upgrade
- sudo apt-get install git
- git --version [to check that the installation is successful]
-```
-
+	```
+	sudo apt-get update && sudo apt-get upgrade
+	sudo apt-get install git
+	git --version [to check that the installation is successful]
+	```
 ### Installing Docker [Required]
 	
 An excellent write-up can be found [here](https://withblue.ink/2020/06/24/docker-and-docker-compose-on-raspberry-pi-os.html).
 ```
-# Install some required packages first
+# Install some required packages first**
 sudo apt update
 sudo apt install -y \
 apt-transport-https \
@@ -50,7 +48,7 @@ curl \
 gnupg2 \
 software-properties-common
 
-# Get the Docker signing key for packages
+# Get the Docker signing key for packages**
 curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg | sudo apt-key add -
 
 # Add the Docker official repos
@@ -71,9 +69,9 @@ sudo systemctl enable --now docker
 sudo usermod -aG docker $USER
 
 # Reboot the Pi
-sudo reboot#
+sudo reboot
 
-# Test the Docker installation
+# Test the Docker installation**
 docker info
 ```
 
@@ -111,7 +109,7 @@ If you are able to setup your Raspberry PI with the above instructions, congratu
 
 Act 2 of 3 [From Zero to Microservices]
 
-You can actually skip this section and go straight to the last Act if you just want to download the pre-built Docker images and use them but you are most welcomed to explore this section with me.  In this section, I will discuss the nitty-gritty of building the docker containers and share all the source code.  I will essentially chronologically document everything I did to get the Raspberry PI from zero to completion.  Obviously, my first step was to build the Raspberry PI image per the instructions in the first part of this write-up.  I will preemptively mention that the Raspberry PI 4 I had only has 1GB of memory and it was not enough to run all my microservices smoothly so I decided to use a second Pi [an older PI 3B+(1GB)].  Essentially, I used the PI-4 to run the MongoDB and the 2 REST web services and then used the PI-3 to host my React UI front-end.
+You can actually skip this section and go straight to the last Act if you just want to download the pre-built Docker images and use them but you are most welcome to explore this section with me.  In this section, I will discuss the nitty-gritty of building the docker containers and share all the source code.  I will essentially chronologically document everything I did to get the Raspberry PI from zero to completion.  Obviously, my first step was to build the Raspberry PI image per the instructions in the first part of this write-up.  I will preemptively mention that the Raspberry PI 4 I had only has 1GB of memory and it was not enough to run all my microservices smoothly so I decided to use a second Pi [an older PI 3B+(1GB)].  Essentially, I used the PI-4 to run the MongoDB and the 2 REST web services and then used the PI-3 to host my React UI front-end.
 
 #### Tip: All official docker images can be retrieved from http://hub.docker.com  If you are using a Windows, you would need to installed Docker Desktop.  This is required even if you are using WSL.
 
@@ -120,91 +118,89 @@ What I did was to write the code on my laptop and then git cloned the code on th
 Start by cloning the source code from https://github.com/hujanais/hello-microservices.git
 
 1. <b>Creating a MongoDB Docker container and populating it with some test data.</b>
-- Download an official MongoDB docker image using 'docker pull mongo:4.4' on my Pi.  I used version 4.4 because it is supported by the Bullseye ARM64V8 OS.
-- Check to make sure the image has been created using 'docker images'.  The MongoDB image should show up.	
-[image]
-- Now we can create and start a new MongoDB container.  
-```
-docker run -d -p 27017:27017 mongo:4.4 --name store-db
-```
-- In the event that the port 27017 is blocked and you are unable to access the database from your laptop, you might need to open up the Pi's firewall.
-```
-sudo apt install ufw
-sudo ufw allow 27017/tcp
-```
-- I use MongoDB Compass client to connect to the database from my laptop and created 2 new collections in my database called Users and Product.  The I just populated some test data inside a textfile(json format) and just imported them into the collections.
-- Incidentally, you can also interact with the database using MongoDB shell directly on the Docker container.  To do this, you will enter the Docker container in interactive mode. To enter the Docker container in interactive mode, 
-```
-docker ps # this will show you the list of running containers and the containerId
-docker exec -it [docker-container-id] bash
-# you will see that the shell prompt will change from the Pi root to the Container root.
-```
-2. <b>Building the Auth-API docker container from source code. [.NET Core 6 code is in the userapi folder]</b><br>
-For the Auth-API, I wanted a simple way for the user to log in with a username/password and return a session token like a JWT-token.
-
-```
-# build a Docker image based on the Dockerfile
-docker build -t user-api .  [pay attention to the '.' in the command]
+	- Download an official MongoDB docker image using 'docker pull mongo:4.4' on my Pi.  I used version 4.4 because it is supported by the Bullseye ARM64V8 OS.
+	- Check to make sure the image has been created using 'docker images'.  The MongoDB image should show up.
+	[image]
+	- Now we can create and start a new MongoDB container.  
+	```
+	docker run -d -p 27017:27017 mongo:4.4 --name store-db
+	```
+	- In the event that the port 27017 is blocked and you are unable to access the database from your laptop, you might need to open up the Pi's firewall.
+	```
+	sudo apt install ufw
+	sudo ufw allow 27017/tcp
+	```
+	- I use MongoDB Compass client to connect to the database from my laptop and created 2 new collections in my database called Users and Product.  The I just populated some test data inside a textfile(json format) and just imported them into the collections.
+	- Incidentally, you can also interact with the database using MongoDB shell directly on the Docker container.  To do this, you will enter the Docker container in interactive mode. To enter the Docker container in interactive mode, 
+	```
+	docker ps # this will show you the list of running containers and the containerId
+	docker exec -it [docker-container-id] bash
+	# you will see that the shell prompt will change from the Pi root to the Container root.
+	```
+2. <b>Building the Auth-API docker container from source code. [.NET Core 6 code is in the userapi folder]</b>
+	For the Auth-API, I wanted a simple way for the user to log in with a username/password and return a session token like a JWT-token.
+	```
+	# build a Docker image based on the Dockerfile
+	docker build -t user-api .  [pay attention to the '.' in the command]
 	
-# run a the Docker image that was created.
-# -d to run in detached mode, -p turns on 5500 as the public port
-docker run -d -p 5500:80 --name user-api user-api  
+	# run a the Docker image that was created.
+	# -d to run in detached mode, -p turns on 5500 as the public port
+	docker run -d -p 5500:80 --name user-api user-api  
  	
-# now from your laptop, you can access the AuthAPI.
-curl --location --request POST 'http://192.168.1.XX:5500/api/users' \
-	--header 'Content-Type: application/json' \
-	--data-raw '{ "Username": "guest", "Password": "password" }
-
-# if succeeded return {isSuccess: true, jwt: 968237324 }
-```
+ 	# now from your laptop, you can access the AuthAPI.
+ 	curl --location --request POST 'http://192.168.1.XX:5500/api/users' \
+		--header 'Content-Type: application/json' \
+		--data-raw '{ "Username": "guest", "Password": "password" }
+		# if succeeded return {isSuccess: true, jwt: 968237324 }
+	```
 	
-3. <b>Building the Product-API docker container from source code. [.NET Core 6 code is in the productapi folder]</b><br>
-My requirement here is to have the ability to retrieve a list of products from the database via,
-```
-# build a Docker image based on the Dockerfile
-docker build -t product-api .  [pay attention to the '.' in the command]
+3. <b>Building the Product-API docker container from source code. [.NET Core 6 code is in the productapi folder]</b>
+	My requirement here is to have the ability to retrieve a list of products from the database via,
+	```
+	# build a Docker image based on the Dockerfile
+	docker build -t product-api .  [pay attention to the '.' in the command]
 	
-# run a the Docker image that was created.
-# -d to run in detached mode, -p turns on 5501 as the public port
-docker run -d -p 5501:80 --name product-api product-api  
+	# run a the Docker image that was created.
+	# -d to run in detached mode, -p turns on 5501 as the public port
+	docker run -d -p 5501:80 --name product-api product-api  
  	
- # now from your laptop, you can access the ProductAPI.
-curl --location --request GET 'http://192.168.1.XX:5501/api/product' \
+ 	# now from your laptop, you can access the ProductAPI.
+	curl --location --request GET 'http://192.168.1.XX:5501/api/product' \
 	--header 'jwt: 968237324'
-# if the token is incorrect, nothing will be returned
-# if the token is authenticated, the product list will be returned.
-```
-4. <b>The deeper dive into the .NET API Dockerfile</b><br>
-The instructions to build docker images are stored in a file called the Dockerfile. [yes this file has no extension]  There is also a corresponding .dockerignore file to as you guessed it, to keep unnecessary files out of the container for size considerations.
-```
-# pull the official microsoft sdk docker base image for the bullseye OS.
-FROM mcr.microsoft.com/dotnet/sdk:6.0.201-bullseye-slim-arm64v8 AS build
-WORKDIR /src				# set the working folder on the container
-COPY productapi.csproj .	# copy the project file from local to /src
-RUN dotnet restore			# run the dotnet restore to update dependencies
-COPY . .					# copy everything from local to /src (minus the dockerignore list)
-RUN dotnet publish -c release -o /app	# build the application and push to /src/app folder
+	# if the token is incorrect, nothing will be returned
+	# if the token is authenticated, the product list will be returned.
+	```
+4.	 <b>The deeper dive into the .NET API Dockerfile</b>
+	The instructions to build docker images are stored in a file called the Dockerfile. [yes this file has no extension]  There is also a corresponding .dockerignore file to as you guessed it, to keep unnecessary files out of the container for size considerations.
+	```
+	# pull the official microsoft sdk docker base image for the bullseye OS.
+	FROM mcr.microsoft.com/dotnet/sdk:6.0.201-bullseye-slim-arm64v8 AS build
+	WORKDIR /src				# set the working folder on the container
+	COPY productapi.csproj .	# copy the project file from local to /src
+	RUN dotnet restore			# run the dotnet restore to update dependencies
+	COPY . .					# copy everything from local to /src (minus the dockerignore list)
+	RUN dotnet publish -c release -o /app	# build the application and push to /src/app folder
 	
-# pull the asp.net webapi runtime
-FROM mcr.microsoft.com/dotnet/aspnet:6.0.3-bullseye-slim-arm64v8
-WORKDIR /app
-EXPOSE 80	# expose port 80
-EXPOSE 443	# export port 443 but I have SSL turned off for simplicity.
-COPY --from=build /app .
-ENTRYPOINT ["dotnet", "productapi.dll"]	# the command to run the REST service
-```
-
+	# pull the asp.net webapi runtime
+	FROM mcr.microsoft.com/dotnet/aspnet:6.0.3-bullseye-slim-arm64v8
+	WORKDIR /app
+	EXPOSE 80	# expose port 80
+	EXPOSE 443	# export port 443 but I have SSL turned off for simplicity.
+	COPY --from=build /app .
+	ENTRYPOINT ["dotnet", "productapi.dll"]	# the command to run the REST service
+	```
 To be honest, my knowledge of Docker is rudimentary and use it only as needed at work but the heavy-duty deployment instructions are done by the CI/CD folks.  Anyhow, let's look at my Dockerfile.  This Dockerfile is pretty much identical for both the Auth and Product API.  
 
-** Just a note that there is also a docker-compose.yaml file that you can use to deploy grouped containers so that they are running on the same docker network so please look that up as well.  I am not using any of that in this tutorial to keep the readability.
+Just a note that there is also a docker-compose.yaml file that you can use to deploy grouped containers so that they are running on the same docker network so please look that up as well.  I am not using any of that in this tutorial to keep the readability.
 
 5. <b>Building the React front-end from source code. [source code is in the dashboard folder]</b>
 This is a bare-metal front-end so please don't judge and it was my very first time using React.  One issue I ran into is that my Raspberry Pi (1GB) was running out of memory so I decided to use a second Pi to host the React front-end.
-```
-docker build -t dashboard .
-docker run -d -p 8080:80 --name dashboard
-```
-So to actually serve the front-end, we will not be using the development server.  We will use NGINX web server instead.  I suppose you can still use Apache if you like.  The Dockerfile for React Front-End [I mostly just copied this from my Angular project]  
+	```
+	docker build -t dashboard .
+	docker run -d -p 8080:80 --name dashboard
+	```
+So to actually serve the front-end, we will not be using the development server.  We will use NGINX web server instead.  I suppose you can still use Apache if you like...
+The Dockerfile for React Front-End [I mostly just copied this from my Angular project]  
 ```
 FROM arm64v8/node:14-bullseye-slim AS builder
 # Set working directory
@@ -237,11 +233,7 @@ ENTRYPOINT ["nginx", "-g", "daemon off;"]
 EXPOSE 80
 STOPSIGNAL SIGTERM
 ```
-
-Since the front-end needs to consume the REST webservices, we need to tell nginx where to reverse-proxy the api calls to.  
-Note that you will need to modify this file with your server ip address to work but I will explain all that in the next section again.
-Let's look at the nginx.conf file that is referenced by the dashboard Dockerfile
-
+Since the front-end needs to consume the REST webservices, we need to tell nginx where to reverse-proxy the api calls to.  Note that you will need to modify this file with your server ip address to work but I will explain all that in the next section again.  Let's look at the nginx.conf file that is referenced by the dashboard Dockerfile
 ```
 server {
 	listen 80;  				# serve the webserver on port 80
