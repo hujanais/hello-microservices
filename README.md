@@ -200,7 +200,8 @@ This is a bare-metal front-end so please don't judge and it was my very first ti
 docker build -t dashboard .
 docker run -d -p 8080:80 --name dashboard
 ```
-So to actually serve the front-end, we will not be using the development server.  We will use NGINX web server instead.  I suppose you can still use Apache if you like.  The Dockerfile for React Front-End [I mostly just copied this from another Angular project I was working on]  
+So to actually serve the front-end, we will not be using the development server.  We will use NGINX web server instead.  I suppose you can still use Apache if you like.  The Dockerfile for React Front-End (I mostly just copied this from another Angular project I was working on)
+
 ```
 FROM arm64v8/node:14-bullseye-slim AS builder
 # Set working directory
@@ -233,7 +234,9 @@ ENTRYPOINT ["nginx", "-g", "daemon off;"]
 EXPOSE 80
 STOPSIGNAL SIGTERM
 ```
+
 Since the front-end needs to consume the REST webservices, we need to tell nginx where to reverse-proxy the api calls to.  Note that you will need to modify this file with your server ip address to work but I will explain all that in the next section again.  Let's look at the nginx.conf file that is referenced by the dashboard Dockerfile
+
 ```
 server {
 	listen 80;  				# serve the webserver on port 80
@@ -262,6 +265,7 @@ server {
 	}
 }
 ```
+
 6. <b>Save docker images for distribution [2 options]</b>
 	+ Option 1 is to save an image based on the created container
 	```
@@ -299,6 +303,7 @@ server {
 
 	# repeat for the other user-api, product-api and dashboard containers/images
 	```
+	
 ## Using docker containers as microservices
 
 <a name="act3">Act 3 of 3 [The deployment and usage]</a>
