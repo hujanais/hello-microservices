@@ -200,8 +200,7 @@ This is a bare-metal front-end so please don't judge and it was my very first ti
 docker build -t dashboard .
 docker run -d -p 8080:80 --name dashboard
 ```
-So to actually serve the front-end, we will not be using the development server.  We will use NGINX web server instead.  I suppose you can still use Apache if you like...
-The Dockerfile for React Front-End [I mostly just copied this from my Angular project]  
+So to actually serve the front-end, we will not be using the development server.  We will use NGINX web server instead.  I suppose you can still use Apache if you like.  The Dockerfile for React Front-End [I mostly just copied this from another Angular project I was working on]  
 ```
 FROM arm64v8/node:14-bullseye-slim AS builder
 # Set working directory
