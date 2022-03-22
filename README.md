@@ -196,10 +196,10 @@ Just a note that there is also a docker-compose.yaml file that you can use to de
 
 5. <b>Building the React front-end from source code. [source code is in the dashboard folder]</b>
 This is a bare-metal front-end so please don't judge and it was my very first time using React.  One issue I ran into is that my Raspberry Pi (1GB) was running out of memory so I decided to use a second Pi to host the React front-end.
-	```
-	docker build -t dashboard .
-	docker run -d -p 8080:80 --name dashboard
-	```
+```
+docker build -t dashboard .
+docker run -d -p 8080:80 --name dashboard
+```
 So to actually serve the front-end, we will not be using the development server.  We will use NGINX web server instead.  I suppose you can still use Apache if you like...
 The Dockerfile for React Front-End [I mostly just copied this from my Angular project]  
 ```
