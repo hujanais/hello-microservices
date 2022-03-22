@@ -30,16 +30,17 @@ For my demo, I have decided to use the following tech stack.  ReactJS and .NET C
  5. You will probably need to go to your router to get the IP address of the Pi, but once you get it, you can now SSH into it with your favorite terminal like Putty, Git-Bash, etc.  Personally, I like MobaXTerm because I like to be able to run multiple sessions to different remote devices from 1 app.
  
 ### Installing Git [Required]
-	```
-	sudo apt-get update && sudo apt-get upgrade
-	sudo apt-get install git
-	git --version [to check that the installation is successful]
-	```
+```
+sudo apt-get update && sudo apt-get upgrade
+sudo apt-get install git
+git --version [to check that the installation is successful]
+```
+
 ### Installing Docker [Required]
 	
 An excellent write-up can be found [here](https://withblue.ink/2020/06/24/docker-and-docker-compose-on-raspberry-pi-os.html).
 ```
-# Install some required packages first**
+# Install some required packages first
 sudo apt update
 sudo apt install -y \
 apt-transport-https \
@@ -71,7 +72,7 @@ sudo usermod -aG docker $USER
 # Reboot the Pi
 sudo reboot
 
-# Test the Docker installation**
+# Test the Docker installation
 docker info
 ```
 
@@ -109,7 +110,7 @@ If you are able to setup your Raspberry PI with the above instructions, congratu
 
 <a name="act2">Act 2 of 3 [From Zero to Docker Microservices]</a>
 
-You can actually skip this section and go straight to the last Act if you just want to download the pre-built Docker images and use them but you are most welcome to explore this section with me.  In this section, I will discuss the nitty-gritty of building the docker containers and share all the source code.  I will essentially chronologically document everything I did to get the Raspberry PI from zero to completion.  Obviously, my first step was to build the Raspberry PI image per the instructions in the first part of this write-up.  I will preemptively mention that the Raspberry PI 4 I had only has 1GB of memory and it was not enough to run all my microservices smoothly so I decided to use a second Pi [an older PI 3B+(1GB)].  Essentially, I used the PI-4 to run the MongoDB and the 2 REST web services and then used the PI-3 to host my React UI front-end.
+In this section, I will discuss the nitty-gritty of building the docker containers and share all the source code.  I will essentially chronologically document everything I did to get the Raspberry PI from zero to completion.  Obviously, my first step was to build the Raspberry PI image per the instructions in the first part of this write-up.  I will preemptively mention that the Raspberry PI 4 I had only has 1GB of memory and it was not enough to run all my microservices smoothly so I decided to use a second Pi [an older PI 3B+(1GB)].  Essentially, I used the PI-4 to run the MongoDB and the 2 REST web services and then used the PI-3 to host my React UI front-end.  You can choose to skip this section to [the final section](#act3) that explains the actual usage of the Docker microservices and come back to this section at a later time.
 
 #### Tip: All official docker images can be retrieved from http://hub.docker.com  If you are using a Windows, you would need to installed Docker Desktop.  This is required even if you are using WSL.
 
@@ -156,7 +157,7 @@ Start by cloning the source code from https://github.com/hujanais/hello-microser
 	
 3. <b>Building the Product-API docker container from source code. [.NET Core 6 code is in the productapi folder]</b>
 	My requirement here is to have the ability to retrieve a list of products from the database via,
-	```
+```
 	# build a Docker image based on the Dockerfile
 	docker build -t product-api .  [pay attention to the '.' in the command]
 	
@@ -169,10 +170,10 @@ Start by cloning the source code from https://github.com/hujanais/hello-microser
 	--header 'jwt: 968237324'
 	# if the token is incorrect, nothing will be returned
 	# if the token is authenticated, the product list will be returned.
-	```
+```
 4.	 <b>The deeper dive into the .NET API Dockerfile</b>
 	The instructions to build docker images are stored in a file called the Dockerfile. [yes this file has no extension]  There is also a corresponding .dockerignore file to as you guessed it, to keep unnecessary files out of the container for size considerations.
-	```
+```
 	# pull the official microsoft sdk docker base image for the bullseye OS.
 	FROM mcr.microsoft.com/dotnet/sdk:6.0.201-bullseye-slim-arm64v8 AS build
 	WORKDIR /src				# set the working folder on the container
@@ -188,7 +189,7 @@ Start by cloning the source code from https://github.com/hujanais/hello-microser
 	EXPOSE 443	# export port 443 but I have SSL turned off for simplicity.
 	COPY --from=build /app .
 	ENTRYPOINT ["dotnet", "productapi.dll"]	# the command to run the REST service
-	```
+```
 To be honest, my knowledge of Docker is rudimentary, and use it only as needed at work but the heavy-duty deployment instructions are done by the CI/CD folks.  Anyhow, let's look at my Dockerfile.  This Dockerfile is pretty much identical for both the Auth and Product API.  
 
 Just a note that there is also a docker-compose.yaml file that you can use to deploy grouped containers so that they are running on the same docker network so please look that up as well.  I am not using any of that in this tutorial to keep the readability.
@@ -280,7 +281,7 @@ server {
 			- wickedcool/hello-microservices-productapi
 			- wickedcool/hello-microservices-mongo
 	```
-	# Step 3. On the Pi, I pushed the docker images to the the repository.
+	# On the Pi, I pushed the docker images to the the repository.
 	
 	# login to docker on the Pi.
 	docker login 
