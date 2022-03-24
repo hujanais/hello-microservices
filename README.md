@@ -5,7 +5,7 @@
 This guide is to provide a practical walkthrough of creating, deploying, and using microservices.  The benefits of microservices when it comes to resource balancing, deployment, software development will not be discussed in this article.  However, at the end of this tutorial, you should have a high-level understanding of how containerized deployment works and a practical approach to using it as a general guide for your product deployment.
 
 ### Overview of what we are trying to build
-For the purposes of this article and demonstration, we will build a hypothetical application as shown below.
+For this article and demonstration, we will build a hypothetical application as shown below.
 ![alt text](./Overview.PNG)
 A web interface will try to login via an Auth service and then after authentication will be allowed to retrieve data from a Product service.  Both the Auth and Product REST services retrieve data from a shared MongoDB database.
 
@@ -90,7 +90,7 @@ nvm install v14
  
 ### Installing .NET Core 6 [this is optional and for your curiosity]
 This is optional but useful for those who want to do direct development on the Pi.  You can use VSCode from your laptop to remotely code using the remote development pack.  Frankly, this is mostly for laughs since it is too slow in my opinion.  You are better off doing the same thing using WSL or Docker from your computer.
-Go to the [Microsoft official SDK](https://dotnet.microsoft.com/en-us/download) download site and the the installer script for Linux.
+Go to the [Microsoft official SDK](https://dotnet.microsoft.com/en-us/download) download site and the installer script for Linux.
 ```
 wget https://dotnet.microsoft.com/en-us/download/dotnet/scripts
 chmod +x ./dotnet-install.sh
@@ -104,13 +104,13 @@ sudo reboot
 You should now be able to run the dotnet cli from any directory.
 
 ------
-If you are able to setup your Raspberry PI with the above instructions, congratulation and I hope my instructions were easy enough to follow.  The next section will take you through my process of going from source code to Docker microservices.
+If you can setup your Raspberry PI with the above instructions, congratulation and I hope my instructions were easy enough to follow.  The next section will take you through my process of going from source code to Docker microservices.
 
 ## Using docker containers as microservices
 
 <a name="act2">Act 2 of 3 [The deployment and usage]</a>
 
-This section assumes that you have set up your Raspberry Pis according to instructions in [section 1](#act1).  In this section, I have already coded and built the all the neccessary docker containers used in this demo.  Here we will just be the consumer of these containers so that we can understand from a high level the layout of the land.  In the [next section](#act3), if you so choose, I have chronologically documented the entire soup to nuts coding process.  
+This section assumes that you have set up your Raspberry Pis according to instructions in [section 1](#act1).  In this section, I have already coded and built all the necessary docker containers used in this demo.  Here we will just be the consumer of these containers so that we can understand from a high-level lay of the land.  In the [next section](#act3), if you so choose, I have chronologically documented the entire soup to nuts coding process.  
 
 ```
 # Install MongoDB, Auth-API and Product-API docker containers on Raspberry Pi 1.
@@ -156,7 +156,7 @@ vi /etc/nginx/conf.d/default.conf
 : x!
 
 # back in the shell command, type exit to exit from the container.
-# check that the docker container is indeed will running.
+# check that the docker container is running.
 docker ps
 
 # now go to your laptop browser and navigate to 
@@ -169,9 +169,9 @@ http://raspberypi-2-ipAddress:8080
 
 In this section, I will discuss the nitty-gritty of building the docker containers and share all the source code.  I will essentially chronologically document everything I did to get the Raspberry PI from zero to completion.  Obviously, my first step was to build the Raspberry PI image per the instructions in the first part of this write-up.  I had to use 2 Raspberry PIs because my 1GB Pi was not enough to run all my microservices smoothly so I decided to use a second Pi [an older PI 3B+(1GB)].  Essentially, I used the PI-4 to run the MongoDB and the 2 REST web services and then used the PI-3 to host my React UI front-end. 
 
-#### Tip: All official docker images can be retrieved from http://hub.docker.com  If you are using a Windows, you would need to installed Docker Desktop.  This is required even if you are using WSL.
+#### Tip: All official docker images can be retrieved from http://hub.docker.com  If you are using a Windows, you would need to install Docker Desktop.  This is required even if you are using WSL.
 
-What I did was to write the code on my laptop and then git cloned the code on the Raspberry Pi to build the images directly there.  You can also build on your laptop but more thought needs to be go into making sure you are building the docker images for the correct target chip architecture.  For example, an AMD build will not work on the Pi's ARM chipset.  
+What I did was to write the code on my laptop and then git clone the code on the Raspberry Pi to build the images directly there.  You can also build on your laptop but more thought needs to go into making sure you are building the docker images for the correct target chip architecture.  For example, an AMD build will not work on the Pi's ARM chipset.  
 
 Start by cloning the source code from https://github.com/hujanais/hello-microservices.git
 
@@ -188,7 +188,7 @@ Start by cloning the source code from https://github.com/hujanais/hello-microser
 	sudo apt install ufw
 	sudo ufw allow 27017/tcp
 	```
-	- I use MongoDB Compass client to connect to the database from my laptop and created 2 new collections in my database called Users and Product.  The I just populated some test data inside a textfile(json format) and just imported them into the collections.
+	- I use MongoDB Compass client to connect to the database from my laptop and created 2 new collections in my database called Users and Product.  I just populated some test data inside a textfile(json format) and just imported them into the collections.
 	- Incidentally, you can also interact with the database using MongoDB shell directly on the Docker container.  To do this, you will enter the Docker container in interactive mode. To enter the Docker container in interactive mode, 
 	```
 	docker ps # this will show you the list of running containers and the containerId
@@ -231,7 +231,7 @@ Start by cloning the source code from https://github.com/hujanais/hello-microser
 4.	 <b>The deeper dive into the .NET API Dockerfile</b>
 	The instructions to build docker images are stored in a file called the Dockerfile. [yes this file has no extension]  There is also a corresponding .dockerignore file to as you guessed it, to keep unnecessary files out of the container for size considerations.
 ```
-	# pull the official microsoft sdk docker base image for the bullseye OS.
+	# pull the official Microsoft sdk docker base image for the bullseye OS.
 	FROM mcr.microsoft.com/dotnet/sdk:6.0.201-bullseye-slim-arm64v8 AS build
 	WORKDIR /src				# set the working folder on the container
 	COPY productapi.csproj .	# copy the project file from local to /src
@@ -345,7 +345,7 @@ Option 2 is to use docker hub which is the direction I chose.
 	- wickedcool/hello-microservices-mongo
 	
 ```
-# On the Pi, I pushed the docker images to the the repository.
+# On the Pi, I pushed the docker images to the repository.
 	
 # login to docker on the Pi.
 docker login 
@@ -365,4 +365,4 @@ docker pull wickedcool/microservices-mongo:initial.
 # repeat for the other user-api, product-api and dashboard containers/images
 ```
 
-Thanks for reading and I hope this gives you a high level view of how to use Docker as microservices.
+Thanks for reading and I hope this gives you a high-level view of how to use Docker as microservices.
