@@ -6,7 +6,7 @@ This guide is to provide a practical walkthrough of creating, deploying, and usi
 
 ### Overview of what we are trying to build
 For the purposes of this article and demonstration, we will build a hypothetical application as shown below.
-![alt text](https://github.com/hujanais/hello-microservices/blob/main/Overview.PNG)
+![alt text](./Overview.PNG)
 A web interface will try to login via an Auth service and then after authentication will be allowed to retrieve data from a Product service.  Both the Auth and Product REST services retrieve data from a shared MongoDB database.
 
 ### Tech stack
