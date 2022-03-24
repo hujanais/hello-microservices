@@ -106,11 +106,68 @@ You should now be able to run the dotnet cli from any directory.
 ------
 If you are able to setup your Raspberry PI with the above instructions, congratulation and I hope my instructions were easy enough to follow.  The next section will take you through my process of going from source code to Docker microservices.
 
+## Using docker containers as microservices
+
+<a name="act2">Act 2 of 3 [The deployment and usage]</a>
+
+This section assumes that you have set up your Raspberry Pis according to instructions in [section 1](#act1).  In this section, I have already coded and built the all the neccessary docker containers used in this demo.  Here we will just be the consumer of these containers so that we can understand from a high level the layout of the land.  In the [next section](#act3), if you so choose, I have chronologically documented the entire soup to nuts coding process.  
+
+```
+# Install MongoDB, Auth-API and Product-API docker containers on Raspberry Pi 1.
+docker pull wickedcool/hello-microservices-mongo:initial
+docker pull wickedcool/hello-microservices-productapi:initial
+docker pull wickedcool/hello-microservices-authapi:initial
+
+# check that all the 3 dockers images have been downloaded.
+docker images
+
+# run the 3 images as detached microservices
+docker run -d -p 27017:27017 wickedcool/hello-microservices-mongo:initial --name store-db
+docker run -d -p 5500:80 wickedcool/hello-microservices-authapi:initial --name user-api 
+docker run -d -p 5501:80 wickedcool/hello-microservices-productapi:initial --name product-api
+
+# check that the 3 Docker microservices are running.
+docker ps
+
+# you can now access these services from a laptop using the port numbers 27017, 5500 and 5501.
+```
+
+```
+# Install Dashboard React front-end on Raspberry Pi 2.
+docker push wickedcool/hello-microservices-dashboard:initial
+
+# check that the docker image has been downloaded.
+docker images
+
+# run the image as a detached microservice.
+docker run -d -p 8080:80 wickedcool/hello-microservices-dashboard:initial --name dashboard
+
+# check that the docker container is running.
+docker ps
+
+# we need to update the nginx configuration with your server ip.  The one I have created is for my setup.  To do this, we just need to shell into the container and change the nginx configuration.
+docker exec -it [containerId] /bin/sh
+
+# now you will now be inside the docker container.  
+# navigate to the nginx.conf file to edit the IP address of your first Raspberry Pi.
+vi /etc/nginx/conf.d/default.conf
+
+# replace http://192.168.1.69 with your IP address and then save and exit vi editor.
+: x!
+
+# back in the shell command, type exit to exit from the container.
+# check that the docker container is indeed will running.
+docker ps
+
+# now go to your laptop browser and navigate to 
+http://raspberypi-2-ipAddress:8080 
+```
+
 ## From Source Code To Docker Microservices
 
-<a name="act2">Act 2 of 3 [From Zero to Docker Microservices]</a>
+<a name="act3">Act 3 of 3 [From Zero to Docker Microservices]</a>
 
-In this section, I will discuss the nitty-gritty of building the docker containers and share all the source code.  I will essentially chronologically document everything I did to get the Raspberry PI from zero to completion.  Obviously, my first step was to build the Raspberry PI image per the instructions in the first part of this write-up.  I will preemptively mention that the Raspberry PI 4 I had only has 1GB of memory and it was not enough to run all my microservices smoothly so I decided to use a second Pi [an older PI 3B+(1GB)].  Essentially, I used the PI-4 to run the MongoDB and the 2 REST web services and then used the PI-3 to host my React UI front-end.  You can choose to skip this section to [the final section](#act3) that explains the actual usage of the Docker microservices and come back to this section at a later time.
+In this section, I will discuss the nitty-gritty of building the docker containers and share all the source code.  I will essentially chronologically document everything I did to get the Raspberry PI from zero to completion.  Obviously, my first step was to build the Raspberry PI image per the instructions in the first part of this write-up.  I had to use 2 Raspberry PIs because my 1GB Pi was not enough to run all my microservices smoothly so I decided to use a second Pi [an older PI 3B+(1GB)].  Essentially, I used the PI-4 to run the MongoDB and the 2 REST web services and then used the PI-3 to host my React UI front-end. 
 
 #### Tip: All official docker images can be retrieved from http://hub.docker.com  If you are using a Windows, you would need to installed Docker Desktop.  This is required even if you are using WSL.
 
@@ -303,62 +360,5 @@ server {
 
 	# repeat for the other user-api, product-api and dashboard containers/images
 	```
-	
-## Using docker containers as microservices
-
-<a name="act3">Act 3 of 3 [The deployment and usage]</a>
-
-This section assumes that you have set up your Raspberry Pis according to instructions in [section 1](#act1).
-
-```
-# Install MongoDB, Auth-API and Product-API docker containers on Raspberry Pi 1.
-docker pull wickedcool/hello-microservices-mongo:initial
-docker pull wickedcool/hello-microservices-productapi:initial
-docker pull wickedcool/hello-microservices-authapi:initial
-
-# check that all the 3 dockers images have been downloaded.
-docker images
-
-# run the 3 images as detached microservices
-docker run -d -p 27017:27017 wickedcool/hello-microservices-mongo:initial --name store-db
-docker run -d -p 5500:80 wickedcool/hello-microservices-authapi:initial --name user-api 
-docker run -d -p 5501:80 wickedcool/hello-microservices-productapi:initial --name product-api
-
-# check that the 3 Docker microservices are running.
-docker ps
-
-# you can now access these services from a laptop using the port numbers 27017, 5500 and 5501.
-```
-
-```
-# Install Dashboard React front-end on Raspberry Pi 2.
-docker push wickedcool/hello-microservices-dashboard:initial
-
-# check that the docker image has been downloaded.
-docker images
-
-# run the image as a detached microservice.
-docker run -d -p 8080:80 wickedcool/hello-microservices-dashboard:initial --name dashboard
-
-# check that the docker container is running.
-docker ps
-
-# we need to update the nginx configuration with your server ip.  The one I have created is for my setup.  To do this, we just need to shell into the container and change the nginx configuration.
-docker exec -it [containerId] /bin/sh
-
-# now you will now be inside the docker container.  
-# navigate to the nginx.conf file to edit the IP address of your first Raspberry Pi.
-vi /etc/nginx/conf.d/default.conf
-
-# replace http://192.168.1.69 with your IP address and then save and exit vi editor.
-: x!
-
-# back in the shell command, type exit to exit from the container.
-# check that the docker container is indeed will running.
-docker ps
-
-# now go to your laptop browser and navigate to 
-http://raspberypi-2-ipAddress:8080 
-```
 
 Thanks for reading and I hope this gives you a high level view of how to use Docker as microservices.
