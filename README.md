@@ -325,14 +325,14 @@ server {
 
 6. <b>Save docker images for distribution [2 options]</b>
 	+ Option 1 is to save an image based on the created container
-	```
+```
 	# save the container into a tar file that can be transmitted.
 	docker save [container-id] > myImage.tar
 
 	# The tar file can then be reloaded into another target device.
 	# the tar file will be loaded into a docker image that can be used.
 	docker load < myImage.tar
-	```
+```
 	+ Option 2 is to use docker hub which is the direction I chose.
 		+ Step 1.  Create an account on hub.docker.com
 		+ Step 2.  In this example, I created 4 repositories.
@@ -340,7 +340,7 @@ server {
 			- wickedcool/hello-microservices-authapi
 			- wickedcool/hello-microservices-productapi
 			- wickedcool/hello-microservices-mongo
-	```
+```
 	# On the Pi, I pushed the docker images to the the repository.
 	
 	# login to docker on the Pi.
@@ -359,6 +359,6 @@ server {
 	docker pull wickedcool/microservices-mongo:initial.
 
 	# repeat for the other user-api, product-api and dashboard containers/images
-	```
+```
 
 Thanks for reading and I hope this gives you a high level view of how to use Docker as microservices.
