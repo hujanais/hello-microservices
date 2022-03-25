@@ -122,9 +122,9 @@ docker pull wickedcool/hello-microservices-authapi:initial
 docker images
 
 # run the 3 images as detached microservices
-docker run -d -p 27017:27017 wickedcool/hello-microservices-mongo:initial --name store-db
-docker run -d -p 5500:80 wickedcool/hello-microservices-authapi:initial --name user-api 
-docker run -d -p 5501:80 wickedcool/hello-microservices-productapi:initial --name product-api
+docker run -d -p 27017:27017  --name store-db wickedcool/hello-microservices-mongo:initial
+docker run -d -p 5500:80 --name user-api wickedcool/hello-microservices-authapi:initial  
+docker run -d -p 5501:80 --name product-api wickedcool/hello-microservices-productapi:initial
 
 # check that the 3 Docker microservices are running.
 docker ps
@@ -140,7 +140,7 @@ docker push wickedcool/hello-microservices-dashboard:initial
 docker images
 
 # run the image as a detached microservice.
-docker run -d -p 8080:80 wickedcool/hello-microservices-dashboard:initial --name dashboard
+docker run -d -p 8080:80 --name dashboard wickedcool/hello-microservices-dashboard:initial
 
 # check that the docker container is running.
 docker ps
@@ -181,7 +181,7 @@ Start by cloning the source code from https://github.com/hujanais/hello-microser
 	[image]
 	- Now we can create and start a new MongoDB container.  
 	```
-	docker run -d -p 27017:27017 mongo:4.4 --name store-db
+	docker run -d -p 27017:27017 --name store-db mongo:4.4
 	```
 	- In the event that the port 27017 is blocked and you are unable to access the database from your laptop, you might need to open up the Pi's firewall.
 	```
@@ -255,7 +255,7 @@ Just a note that there is also a docker-compose.yaml file that you can use to de
 This is a bare-metal front-end so please don't judge and it was my very first time using React.  One issue I ran into is that my Raspberry Pi (1GB) was running out of memory so I decided to use a second Pi to host the React front-end.
 ```
 docker build -t dashboard .
-docker run -d -p 8080:80 --name dashboard
+docker run -d -p 8080:80 --name dashboard dashboard
 ```
 So to actually serve the front-end, we will not be using the development server.  We will use NGINX web server instead.  I suppose you can still use Apache if you like.  The Dockerfile for React Front-End (I mostly just copied this from another Angular project I was working on)
 
