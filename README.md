@@ -176,7 +176,10 @@ What I did was to write the code on my laptop and then git clone the code on the
 Start by cloning the source code from https://github.com/hujanais/hello-microservices.git
 
 1. <b>Creating a MongoDB Docker container and populating it with some test data.</b>
-	- Download an official MongoDB docker image using 'docker pull mongo:4.4' on my Pi.  I used version 4.4 because it is supported by the Bullseye ARM64V8 OS.
+	```
+	 # Download an official MongoDB docker image. version 4.4 is supposed by Bullseye ARM64V8 so I chose this.
+	 docker pull mongo:4.4
+	```
 	- Check to make sure the image has been created using 'docker images'.  The MongoDB image should show up.
 	[image]
 	- Now we can create and start a new MongoDB container.  
@@ -188,7 +191,7 @@ Start by cloning the source code from https://github.com/hujanais/hello-microser
 	sudo apt install ufw
 	sudo ufw allow 27017/tcp
 	```
-	- I use MongoDB Compass client to connect to the database from my laptop and created 2 new collections in my database called Users and Product.  I just populated some test data inside a textfile(json format) and just imported them into the collections.
+	- I use MongoDB Compass client to connect to the database from my laptop and created 2 new collections in my database called Users and Product.  I just populated some test data inside a textfile(json format) and just imported them into the collections.  Since I do not have any username/password on this test database, your connection string will be mongodb://ip-address:27017.
 	- Incidentally, you can also interact with the database using MongoDB shell directly on the Docker container.  To do this, you will enter the Docker container in interactive mode. To enter the Docker container in interactive mode, 
 	```
 	docker ps # this will show you the list of running containers and the containerId
