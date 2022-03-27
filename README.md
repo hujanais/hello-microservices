@@ -129,6 +129,19 @@ docker run -d -p 5501:80 --name product-api wickedcool/hello-microservices-produ
 # check that the 3 Docker microservices are running.
 docker ps
 
+# now you must modify the app-settings in the auth-api and product-api container to have the IP address of your mongo-db ip.
+# in this case, it would be the ip address of your Pi.
+docker exec -it user-api /bin/sh
+vi app.settings
+# replace http://192.168.1.69 with your IP address and then save and exit vi editor.
+: x!
+
+# repeat for product-api.
+docker exec -it user-api /bin/sh
+vi app.settings
+# replace http://192.168.1.69 with your IP address and then save and exit vi editor.
+: x!
+
 # you can now access these services from a laptop using the port numbers 27017, 5500 and 5501.
 ```
 
