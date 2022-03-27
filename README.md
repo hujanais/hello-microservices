@@ -131,16 +131,15 @@ docker ps
 
 # now you must modify the app-settings in the auth-api and product-api container to have the IP address of your mongo-db ip.
 # in this case, it would be the ip address of your Pi.
-docker exec -it user-api /bin/sh
-vi app.settings
-# replace http://192.168.1.69 with your IP address and then save and exit vi editor.
+docker exec -it user-api bash
+nano appsettings.json # I pre-installed nano in the container.  see act-3
+# replace http://192.168.1.69 with your IP address and then save and exit editor.
 : x!
 
 # repeat for product-api.
-docker exec -it user-api /bin/sh
-vi app.settings
-# replace http://192.168.1.69 with your IP address and then save and exit vi editor.
-: x!
+docker exec -it user-api bash
+nano appsettings.json # I pre-installed nano in the container.  see act-3
+# replace http://192.168.1.69 with your IP address and then save and exit editor.
 
 # you can now access these services from a laptop using the port numbers 27017, 5500 and 5501.
 ```
@@ -159,14 +158,13 @@ docker run -d -p 8080:80 --name dashboard wickedcool/hello-microservices-dashboa
 docker ps
 
 # we need to update the nginx configuration with your server ip.  The one I have created is for my setup.  To do this, we just need to shell into the container and change the nginx configuration.
-docker exec -it [containerId] /bin/sh
+docker exec -it [containerId] bash
 
 # now you will now be inside the docker container.  
 # navigate to the nginx.conf file to edit the IP address of your first Raspberry Pi.
-vi /etc/nginx/conf.d/default.conf
+nano /etc/nginx/conf.d/default.conf
 
-# replace http://192.168.1.69 with your IP address and then save and exit vi editor.
-: x!
+# replace http://192.168.1.69 with your IP address and then save and exit editor.
 
 # back in the shell command, type exit to exit from the container.
 # check that the docker container is running.
@@ -362,6 +360,12 @@ Option 2 is to use docker hub which is the direction I chose.
 	
 ```
 # On the Pi, I pushed the docker images to the repository.
+	
+# for convenience, I installed the nano editor in the dashboard, product-api and user-api containers prior to creating the docker image.
+docker exec -it [container-id] bash
+apt update
+apt install nano
+exit # go back to the pi shell
 	
 # login to docker on the Pi.
 docker login 
