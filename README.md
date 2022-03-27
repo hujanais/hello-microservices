@@ -162,7 +162,8 @@ docker exec -it [containerId] bash
 
 # now you will now be inside the docker container.  
 # navigate to the nginx.conf file to edit the IP address of your first Raspberry Pi.
-nano /etc/nginx/conf.d/default.conf
+vi /etc/nginx/conf.d/default.conf
+:wq!
 
 # replace http://192.168.1.69 with your IP address and then save and exit editor.
 
@@ -361,7 +362,7 @@ Option 2 is to use docker hub which is the direction I chose.
 ```
 # On the Pi, I pushed the docker images to the repository.
 	
-# for convenience, I installed the nano editor in the dashboard, product-api and user-api containers prior to creating the docker image.
+# for convenience, I installed the nano editor in the product-api and user-api containers prior to creating the docker image.
 docker exec -it [container-id] bash
 apt update
 apt install nano
