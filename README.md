@@ -146,7 +146,7 @@ nano appsettings.json # I pre-installed nano in the container.  see act-3
 
 ```
 # Install Dashboard React front-end on Raspberry Pi 2.
-docker push wickedcool/hello-microservices-dashboard:initial
+docker pull wickedcool/hello-microservices-dashboard:initial
 
 # check that the docker image has been downloaded.
 docker images
