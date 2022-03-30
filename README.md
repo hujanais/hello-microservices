@@ -129,6 +129,11 @@ docker run -d -p 5501:80 --name product-api wickedcool/hello-microservices-produ
 # check that the 3 Docker microservices are running.
 docker ps
 
+# Seed the mongo-db with demo data.
+docker exec -it store-db bash
+./seed-db.sh
+exit
+
 # now you must modify the app-settings in the auth-api and product-api container to have the IP address of your mongo-db ip.
 # in this case, it would be the ip address of your Pi.
 docker exec -it user-api bash
@@ -204,7 +209,7 @@ Start by cloning the source code from https://github.com/hujanais/hello-microser
 	sudo ufw allow 27017/tcp
 	```
 	- I use MongoDB Compass client to connect to the database from my laptop and created 2 new collections in my database called Users and Product.  I just populated some test data inside a textfile(json format) and just imported them into the collections.  Since I do not have any username/password on this test database, your connection string will be mongodb://ip-address:27017.
-	- Incidentally, you can also interact with the database using MongoDB shell directly on the Docker container.  To do this, you will enter the Docker container in interactive mode. To enter the Docker container in interactive mode, 
+	- In the mongo-setup folder, you will find the 2 json files and a seed-db.sh script file that you can run to populate the database if you don't use Compass.
 	```
 	docker ps # this will show you the list of running containers and the containerId
 	docker exec -it [docker-container-id] bash
