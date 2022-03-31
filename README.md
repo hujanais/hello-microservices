@@ -1,6 +1,9 @@
 ## A PRACTICAL WALKTHROUGH OF USING AND DEPLOYING MICROSERVICES WITH DOCKER (on Raspberry PIs)
 <a name="act1">Act 1 of 3 [The setup]</a>
 
+### Companion video to help you set up the demo as explained in [Act 2](#act2).
+[Companion Video for Act 2](https://youtu.be/ewbIATYKCcw)
+
 ### Introduction
 This guide is to provide a practical walkthrough of creating, deploying, and using microservices.  The benefits of microservices when it comes to resource balancing, deployment, software development will not be discussed in this article.  However, at the end of this tutorial, you should have a high-level understanding of how containerized deployment works and a practical approach to using it as a general guide for your product deployment.
 
