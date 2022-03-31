@@ -142,7 +142,7 @@ nano appsettings.json # I pre-installed nano in the container.  see act-3
 : x!
 
 # repeat for product-api.
-docker exec -it user-api bash
+docker exec -it product-api bash
 nano appsettings.json # I pre-installed nano in the container.  see act-3
 # replace http://192.168.1.69 with your IP address and then save and exit editor.
 
@@ -163,7 +163,7 @@ docker run -d -p 8080:80 --name dashboard wickedcool/hello-microservices-dashboa
 docker ps
 
 # we need to update the nginx configuration with your server ip.  The one I have created is for my setup.  To do this, we just need to shell into the container and change the nginx configuration.
-docker exec -it [containerId] bash
+docker exec -it [containerId] /bin/sh
 
 # now you will now be inside the docker container.  
 # navigate to the nginx.conf file to edit the IP address of your first Raspberry Pi.
