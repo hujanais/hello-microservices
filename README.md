@@ -29,7 +29,7 @@ For my demo, I have decided to use the following tech stack.  ReactJS and .NET C
  1. Get the official Raspberry PI official installer from https://www.raspberrypi.com/software
  2. Use the Imager tool to install the OS onto a micro-SD card for your Pi.
  3. In the tool, you can choose your OS and in my case, I used the latest 64-bit Bullseye OS Lite version(Incidentally this is required for .NET Core 6).  You can choose the Raspberry Pi OS Lite (64-bit) installer that doesn't have desktop support if you want to run the PI completely in headless mode.
- 4. Now this is an important step, before you run the imager tool, click on the advanced tab and set up the SSH and WIFI support.  This will enable you to set up your Pi in headless mode via a terminal.  This will not allow you to immediately access your PI via SSH and there is no need to use an external keyboard and monitor.
+ 4. Now this is an important step, before you run the imager tool, click on the advanced tab and set up the SSH and WIFI support.  This will enable you to set up your Pi in headless mode via a terminal.  This will now allow you to immediately access your PI via SSH and there is no need to use an external keyboard and monitor.
  5. You will probably need to go to your router to get the IP address of the Pi, but once you get it, you can now SSH into it with your favorite terminal like Putty, Git-Bash, etc.  Personally, I like MobaXTerm because I like to be able to run multiple sessions to different remote devices from 1 app.
  
 ### Installing Git [Required]
@@ -113,7 +113,7 @@ If you can setup your Raspberry PI with the above instructions, congratulation a
 
 <a name="act2">Act 2 of 3 [The deployment and usage]</a>
 
-This section assumes that you have set up your Raspberry Pis according to instructions in [section 1](#act1).  In this section, I have already coded and built all the necessary docker containers used in this demo.  Here we will just be the consumer of these containers so that we can understand from a high-level lay of the land.  In the [next section](#act3), if you so choose, I have chronologically documented the entire soup to nuts coding process.  
+This section assumes that you have set up your Raspberry Pis according to instructions in [section 1](#act1).  In this section, I have already coded and built all the necessary docker containers used in this demo.  Here we will just be the consumer of these containers so that we can understand from a high-level the lay of the land.  In the [next section](#act3), if you so choose, I have chronologically documented the entire soup to nuts coding process.  
 
 ```
 # Install MongoDB, Auth-API and Product-API docker containers on Raspberry Pi 1.
