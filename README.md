@@ -1,8 +1,7 @@
 ## A PRACTICAL WALKTHROUGH OF USING AND DEPLOYING MICROSERVICES WITH DOCKER (on Raspberry PIs)
 <a name="act1">Act 1 of 3 [The setup]</a>
 
-### Companion video to help you set up the demo as explained in [Act 2](#act2).
-[Companion Video for Act 2](https://youtu.be/ewbIATYKCcw)
+### Companion video to help you set up the demo can be found in [Act 2](#act2).
 
 ### Introduction
 This guide is to provide a practical walkthrough of creating, deploying, and using microservices.  The benefits of microservices when it comes to resource balancing, deployment, software development will not be discussed in this article.  However, at the end of this tutorial, you should have a high-level understanding of how containerized deployment works and a practical approach to using it as a general guide for your product deployment.
@@ -112,6 +111,8 @@ If you can setup your Raspberry PI with the above instructions, congratulation a
 ## Using docker containers as microservices
 
 <a name="act2">Act 2 of 3 [The deployment and usage]</a>
+
+[You can follow along with the companion video for Act 2](https://youtu.be/ewbIATYKCcw)
 
 This section assumes that you have set up your Raspberry Pis according to instructions in [section 1](#act1).  In this section, I have already coded and built all the necessary docker containers used in this demo.  Here we will just be the consumer of these containers so that we can understand from a high-level the lay of the land.  In the [next section](#act3), if you so choose, I have chronologically documented the entire soup to nuts coding process.  
 
